@@ -20,12 +20,16 @@ class MainActivity : AppCompatActivity() {
         lifecycle.addObserver(MyObserver())
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         plusOneBtn.setOnClickListener{
-            mainViewModel.counter++
+            mainViewModel.plusOne()
             refreshCounter()
         }
         clear_btn.setOnClickListener{
-            mainViewModel.counter =0
+            mainViewModel.clear()
             refreshCounter()
+        }
+        mainViewModel.getuser("l").observe(this){
+            user->
+            println(user.toString())
         }
     }
     private fun refreshCounter(){
@@ -35,7 +39,7 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         sp.edit {
-            putInt(TAG,mainViewModel.counter)
+            putInt(TAG,mainViewModel.counter.value?:0)
         }
     }
 }

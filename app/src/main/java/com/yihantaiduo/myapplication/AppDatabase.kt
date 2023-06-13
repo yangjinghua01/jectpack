@@ -19,6 +19,12 @@ abstract class AppDatabase : RoomDatabase() {
                 database.execSQL("create table Book (id integer primary key autoincrement not null,name text not null,pages integer not null)")
             }
         }
+        val MiGRATION_2_3 = object : Migration(2,3){
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("alter table Book add column author text not null default 'unknown'")
+            }
+
+        }
 
 
         private var instance: AppDatabase? = null
@@ -30,7 +36,7 @@ abstract class AppDatabase : RoomDatabase() {
             }
             return Room.databaseBuilder(context, AppDatabase::class.java, "app_databases")
                 .addMigrations(
-                    MIGRATION_1_2
+                    MIGRATION_1_2, MiGRATION_2_3
                 ).build().apply {
                 instance = this
             }

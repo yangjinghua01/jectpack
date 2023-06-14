@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.PersistableBundle
 import android.util.Log
+import androidx.work.*
 import kotlinx.android.synthetic.main.activity_main2.*
+import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 
 public class MainActivity2 :AppCompatActivity(){
@@ -40,5 +42,35 @@ public class MainActivity2 :AppCompatActivity(){
                 }
             }
         }
+        dowork.setOnClickListener(){
+            val result = OneTimeWorkRequest.Builder(SimpleWork::class.java).build()
+            WorkManager.getInstance(this).enqueue(result)
+        }
+        WorkManager.getInstance(this).enqueue(rest)
+        WorkManager.getInstance(this).enqueue(result)
+//        处理复杂任务
+        OneTimeWorkRequest.Builder(SimpleWork::class.java).addTag("simple").build()
+//        通过tag来取消任务
+        WorkManager.getInstance(this).cancelAllWorkByTag("simple")
+        val result = OneTimeWorkRequest.Builder(SimpleWork::class.java).build()
+//    通过id进行取消
+        WorkManager.getInstance(this).cancelWorkById(result.id)
+        val result1 = OneTimeWorkRequest.Builder(SimpleWork::class.java)
+            .setBackoffCriteria(BackoffPolicy.LINEAR,10,TimeUnit.MINUTES)//该方法通过二，三参数来更新定时任务
+            .build()
+
+//        监听任务运行结果
+        WorkManager.getInstance(this).getWorkInfoByIdLiveData(result1.id).observe(this){ it->
+            if (it.state == WorkInfo.State.SUCCEEDED){
+                Log.e("TAG", "onCreate: SUCCEEDED")
+            }else if (it.state == WorkInfo.State.FAILED){
+                Log.e("TAG", "onCreate: FAILED" )
+            }
+        }
     }
+//    定时任务
+    val result = OneTimeWorkRequest.Builder(SimpleWork::class.java).build()
+
+//    周期定时任务
+    var rest = PeriodicWorkRequest.Builder(SimpleWork::class.java,15,TimeUnit.MINUTES).build()
 }

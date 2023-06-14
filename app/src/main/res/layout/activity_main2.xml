@@ -37,6 +37,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="query User" />
-
+<Button
+    android:id="@+id/dowork"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:text="do work"/>
 
 </LinearLayout>

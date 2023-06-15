@@ -19,3 +19,21 @@ class Table {
         return builder.toString()
     }
 }
+
+fun main() {
+    var tr = Tr()
+    tr.td {
+        "apple"
+        "grap"
+        "org"
+    }
+    var table = Table()
+    table.tr {
+        td { "adf" }
+        td { "asdf" }
+    }
+    table.tr {
+        td { "asdf" }
+        td { "df" }
+    }
+}
